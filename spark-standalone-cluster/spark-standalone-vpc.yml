@@ -1,0 +1,106 @@
+---
+# Source: spark/templates/spark-master-deployment.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myspark-master-webui
+  annotations:
+    service.beta.kubernetes.io/alicloud-loadbalancer-address-type: intranet
+  labels:
+    heritage: "Tiller"
+    release: "myspark"
+    chart: "spark-0.2.2"
+    component: "myspark-spark-master"
+spec:
+  ports:
+    - name: webui
+      port: 8080
+      targetPort: 8080
+    - name: master
+      port: 7077
+      targetPort: 7077
+  selector:
+    component: "myspark-spark-master"
+  type: "LoadBalancer"
+---
+# Source: spark/templates/spark-master-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: myspark-master
+  labels:
+    heritage: "Tiller"
+    release: "myspark"
+    chart: "spark-0.2.2"
+    component: "myspark-spark-master"
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      component: "myspark-spark-master"
+  template:
+    metadata:
+      labels:
+        heritage: "Tiller"
+        release: "myspark"
+        chart: "spark-0.2.2"
+        component: "myspark-spark-master"
+    spec:
+      containers:
+        - name: myspark-master
+          image: "registry-vpc.cn-shanghai.aliyuncs.com/eric-dev/spark:2.2.0"
+          command: ["/bin/sh","-c"]
+          args: ["echo $(hostname -i) myspark-master >> /etc/hosts; /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master --ip myspark-master --port 7077 --webui-port 8080"]
+          ports:
+            - containerPort: 7077
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+          env:
+          - name: SPARK_DAEMON_MEMORY
+            value: "1g"
+---
+# Source: spark/templates/spark-worker-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: myspark-worker
+  labels:
+    heritage: "Tiller"
+    release: "myspark"
+    chart: "spark-0.2.2"
+    component: "myspark-spark-worker"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      component: "myspark-spark-worker"
+  template:
+    metadata:
+      labels:
+        heritage: "Tiller"
+        release: "myspark"
+        chart: "spark-0.2.2"
+        component: "myspark-spark-worker"
+    spec:
+      containers:
+        - name: myspark-worker
+          image: "registry-vpc.cn-shanghai.aliyuncs.com/eric-dev/spark:2.2.0"
+          command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://myspark-master:7077", "--webui-port", "8081"]
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+          env:
+          - name: SPARK_DAEMON_MEMORY
+            value: "1g"
+          - name: SPARK_WORKER_MEMORY
+            value: "1g"

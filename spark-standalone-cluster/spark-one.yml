@@ -1,0 +1,104 @@
+---
+# Source: spark/templates/spark-master-deployment.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myspark-master-webui
+  labels:
+    heritage: "Tiller"
+    release: "myspark"
+    chart: "spark-0.2.2"
+    component: "myspark-spark-one"
+spec:
+  ports:
+    - name: webui
+      port: 8080
+      targetPort: 8080
+    - name: master
+      port: 7077
+      targetPort: 7077
+    - name: worker1
+      port: 8081
+      targetPort: 8081
+    - name: worker2
+      port: 8082
+      targetPort: 8082
+    - name: app1
+      port: 4040
+      targetPort: 4040
+    - name: app2
+      port: 4041
+      targetPort: 4041
+  selector:
+  selector:
+    component: "myspark-spark-one"
+  type: "LoadBalancer"
+---
+# Source: spark/templates/spark-master-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: myspark-all-in-one
+  labels:
+    heritage: "Tiller"
+    release: "myspark"
+    chart: "spark-0.2.2"
+    component: "myspark-spark-master"
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      component: "myspark-spark-one"
+  template:
+    metadata:
+      labels:
+        heritage: "Tiller"
+        release: "myspark"
+        chart: "spark-0.2.2"
+        component: "myspark-spark-one"
+    spec:
+      containers:
+        - name: myspark-master
+          image: "registry-vpc.cn-shanghai.aliyuncs.com/eric-dev/spark:2.2.0"
+          command: ["/bin/sh","-c"]
+          args: ["echo $(hostname -i) myspark-master >> /etc/hosts; cat /etc/hosts; /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master --ip myspark-master --port 7077 --webui-port 8080"]
+          ports:
+            - containerPort: 7077
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+          env:
+          - name: SPARK_DAEMON_MEMORY
+            value: "512m"
+        - name: myspark-worker1
+          image: "registry-vpc.cn-shanghai.aliyuncs.com/eric-dev/spark:2.2.0"
+          command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://myspark-master:7077", "--webui-port", "8081"]
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1280Mi"
+          env:
+          - name: SPARK_DAEMON_MEMORY
+            value: "256m"
+          - name: SPARK_WORKER_MEMORY
+            value: "1g"
+        - name: myspark-worker2
+          image: "registry-vpc.cn-shanghai.aliyuncs.com/eric-dev/spark:2.2.0"
+          command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://myspark-master:7077", "--webui-port", "8082"]
+          ports:
+            - containerPort: 8082
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1280Mi"
+          env:
+          - name: SPARK_DAEMON_MEMORY
+            value: "256m"
+          - name: SPARK_WORKER_MEMORY
+            value: "1g"
