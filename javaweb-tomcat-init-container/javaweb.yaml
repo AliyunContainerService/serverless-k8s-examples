@@ -27,19 +27,19 @@ spec:
       labels:
         app: tomcat-app
     spec:
-      containers:
+      initContainers:
       - image: resouer/sample:v2
         name: war
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - "cp"
-                - "/sample.war"
-                - "/app"
+        imagePullPolicy: IfNotPresent
         volumeMounts:
         - mountPath: /app
           name: app-volume
+        command:
+          - "cp"
+          - "-r"
+          - "/sample.war"
+          - "/app"
+      containers:
       - image: tomcat:8-jre8-alpine
         name: tomcat
         imagePullPolicy: IfNotPresent

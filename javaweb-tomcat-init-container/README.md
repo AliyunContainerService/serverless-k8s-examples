@@ -1,14 +1,14 @@
-## Java Web Application with Tomcat and Sidecar Container
+## Java Web Application with Tomcat and Init Container
 
-The following document describes the deployment of a Java Web application using Tomcat. Instead of packaging `war` file inside the Tomcat image or mount the `war` as a volume, we use a sidecar container as `war` file provider.
+The following document describes the deployment of a Java Web application using Tomcat. Instead of packaging `war` file inside the Tomcat image or mount the `war` as a volume, we use an Init Container as `war` file provider.
 
 The orginal example is from Kubernetes examples project
 
 https://github.com/kubernetes/examples/blob/master/staging/javaweb-tomcat-sidecar/
 
-The details for Pod with Sidecar
+Details for Init Container
 
-https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/
+https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
 
 ## Test It Out
 
