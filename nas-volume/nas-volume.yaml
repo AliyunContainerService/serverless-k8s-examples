@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-pod
+  labels:
+    app: ubuntu
+spec:
+  containers:
+  - name: ubuntu
+    image:  ubuntu:latest
+    imagePullPolicy: Always
+    command: ["sh", "-c"]
+    args: ["set -x; touch /nas/2; ls /nas; sleep 10000"]
+    volumeMounts:
+    - name: nas
+      mountPath: "/nas"
+  volumes:
+  - name: nas
+    nfs:
+      server: 007c74b9ac-lep52.cn-shanghai.nas.aliyuncs.com  #NAS access address
+      path: /
+  restartPolicy: Never
