@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat-app-svc
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: tomcat-app
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-app
+  labels:
+    app: tomcat-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tomcat-app
+  template:
+    metadata:
+      labels:
+        app: tomcat-app
+    spec:
+      initContainers:
+      - image: resouer/sample:v2
+        name: war
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /app
+          name: app-volume
+        command:
+          - "cp"
+          - "-r"
+          - "/sample.war"
+          - "/app"
+      containers:
+      - image: tomcat:8-jre8-alpine
+        name: tomcat
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /usr/local/tomcat/webapps
+          name: app-volume
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+      volumes:
+      - name: app-volume
+        emptyDir: {}
