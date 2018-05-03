@@ -9,11 +9,11 @@ This directory contains a number of examples of how to run real applications wit
 
 Create the Serverless Kubernetes and copy the cluster config file to  ```~/.kube/config```
 
-![image-20180503115812022](/Users/yili/work/serverless-k8s-examples/cluster.png)
+![cluster](./cluster.png)
 
 
 
-![config](/Users/yili/work/serverless-k8s-examples/config.png)
+![config](./config.png)
 
 
 
