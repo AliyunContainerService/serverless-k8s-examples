@@ -23,7 +23,13 @@ Create the Serverless Kubernetes and copy the cluster config file to  ```~/.kube
 
 Deploy nginx application
 
+
+
 ```
+# Pull image from VPC internal URI
+kubectl run nginx --image registry-vpc.cn-shanghai.aliyuncs.com/denverdino/nginx:1.13.12 --replicas=3
+
+# or pull image from public URI with NAT GW for internet
 kubectl run nginx --image nginx:1.13 --replicas=3
 ```
 
