@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-app
+  labels:
+    k8s-app: tomcat-app
+spec:
+  selector:
+    matchLabels:
+      k8s-app: tomcat-app
+  template:
+    metadata:
+      labels:
+        k8s-app: tomcat-app
+    spec:
+      containers:
+      - name: ilogtail
+        image: registry-vpc.cn-hangzhou.aliyuncs.com/acs/ilogtail:0.13.4-eb42407
+        env:
+          - name: "ALIYUN_REGION_ID"
+            value: "cn-hangzhou"
+          - name: "ALIYUN_LOGTAIL_USER_ID"
+            value: "xxx" #aliyun uid
+          - name: "ALIYUN_LOGTAIL_USER_DEFINED_ID"
+            value: "eci-app-x" #unique id
+        volumeMounts:
+        - name: tomcat-log
+          mountPath: /ecilogs
+          readOnly: true
+      - name: tomcat
+        image: tomcat
+        volumeMounts:
+        - name: tomcat-log
+          mountPath: /usr/local/tomcat/logs
+      volumes:
+      - name: tomcat-log
+        emptyDir: {}

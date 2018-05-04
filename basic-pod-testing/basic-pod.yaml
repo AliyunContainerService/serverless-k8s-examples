@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username: YWRtaW4=
+  password: MWYyZDFlMmU2N2Rm
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: special-config
+data:
+  SPECIAL_LEVEL: very
+  SPECIAL_TYPE: charm
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+  labels:
+    app: test
+spec:
+  initContainers:
+  - name: init-container
+    image: ubuntu
+    #image: nginx:alpine
+    imagePullPolicy: Always
+    command: ["sh", "-c"]
+    args: ["set -x; echo $HOSTNAME; sleep 10;"]
+    volumeMounts:
+    - name: secret-volume
+      readOnly: true
+      mountPath: "/etc/secret-volume"
+  containers:
+  - name: ubuntu
+    image: ubuntu
+    imagePullPolicy: Always
+    workingDir: "/"
+    env:
+    - name: "key1"
+      value: "value1"
+    - name: SPECIAL_LEVEL_KEY
+      valueFrom:
+        configMapKeyRef:
+          name: special-config
+          key: SPECIAL_LEVEL
+    - name: SECRET_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: mysecret
+          key: username
+    envFrom:
+    - configMapRef:
+        name: special-config
+    - secretRef:
+        name: mysecret
+    command: ["sh", "-c"]
+    args: ["set -x; echo $HOSTNAME; echo $PWD; env; ls /etc/secret-volume/; cat /etc/secret-volume/*; ls /emptydir; sleep 10000"]
+    volumeMounts:
+    - name: secret-volume
+      readOnly: true
+      mountPath: "/etc/secret-volume"
+    - name: empty-volume
+      mountPath: "/emptydir"
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: mysecret
+  - name: config-volume
+    configMap:
+      name: special-config
+  - name: empty-volume
+    emptyDir: {}
+  restartPolicy: Never
