@@ -36,9 +36,9 @@ spec:
         name: wordpress
         env:
         - name: WORDPRESS_DB_HOST
-          value: rm-uf67ealy8y1m6nltq.mysql.rds.aliyuncs.com              #rds instance host
+          value: xxx.mysql.rds.aliyuncs.com              #rds instance host address
         - name: WORDPRESS_DB_PASSWORD
-          value: Test1234                                                 #rds instance password
+          value: xxx                                     #rds instance password
         ports:
         - containerPort: 80
           name: wordpress
