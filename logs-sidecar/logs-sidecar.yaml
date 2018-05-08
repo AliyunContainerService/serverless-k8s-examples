@@ -3,15 +3,15 @@ kind: Deployment
 metadata:
   name: tomcat-app
   labels:
-    k8s-app: tomcat-app
+    app: tomcat-app
 spec:
   selector:
     matchLabels:
-      k8s-app: tomcat-app
+      app: tomcat-app
   template:
     metadata:
       labels:
-        k8s-app: tomcat-app
+        app: tomcat-app
     spec:
       containers:
       - name: ilogtail
@@ -20,15 +20,15 @@ spec:
           - name: "ALIYUN_REGION_ID"
             value: "cn-shanghai"
           - name: "ALIYUN_LOGTAIL_USER_ID"
-            value: "xxx" #aliyun uid
+            value: "1851633753497255" # aliyun uid
           - name: "ALIYUN_LOGTAIL_USER_DEFINED_ID"
-            value: "eci-app-x" #unique id
+            value: "serverless_pods" # User-defined identity defined in Machine Group
         volumeMounts:
         - name: tomcat-log
-          mountPath: /ecilogs
+          mountPath: /tomcat_logs
           readOnly: true
       - name: tomcat
-        image: tomcat
+        image: tomcat:8.5-alpine
         volumeMounts:
         - name: tomcat-log
           mountPath: /usr/local/tomcat/logs
