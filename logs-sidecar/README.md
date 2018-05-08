@@ -30,9 +30,16 @@ NOTE: The User-defined Identity will be used for Serverless Kubernetes Pod Ident
 
 #### Config Logstore
 
+* Select the "Other Sources" -> "Text"
+* Config Data Source as following
+
 ![create_logstore_config](create_logstore_config.png)
 
 
+
+* Apply to Machine Group just created
+
+  ​
 
 ## Test It Out
 
