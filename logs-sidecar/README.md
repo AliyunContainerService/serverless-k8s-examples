@@ -66,5 +66,6 @@ Delete application
 
 
 ```
-kubectl delete -f javaweb.yaml
+kubectl delete -f logs-sidecar.yaml
 ```
+
