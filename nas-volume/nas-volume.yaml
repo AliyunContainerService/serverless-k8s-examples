@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: ubuntu-pod
+  name: ubuntu
   labels:
     app: ubuntu
 spec:
@@ -10,13 +10,13 @@ spec:
     image:  ubuntu:latest
     imagePullPolicy: Always
     command: ["sh", "-c"]
-    args: ["set -x; touch /nas/2; ls /nas; sleep 10000"]
+    args: ["set -x; echo hello-serverless > /nas/foo; cat /nas/foo; sleep 180"]
     volumeMounts:
     - name: nas
       mountPath: "/nas"
   volumes:
   - name: nas
     nfs:
-      server: 007c74b9ac-lep52.cn-shanghai.nas.aliyuncs.com  #NAS access address
+      server: ***.cn-shanghai.nas.aliyuncs.com  #NAS access address
       path: /
   restartPolicy: Never
