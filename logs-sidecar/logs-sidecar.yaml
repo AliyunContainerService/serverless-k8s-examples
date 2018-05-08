@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
       - name: ilogtail
-        image: registry-vpc.cn-hangzhou.aliyuncs.com/acs/ilogtail:0.13.4-eb42407
+        image: registry-vpc.cn-shanghai.aliyuncs.com/acs/ilogtail:0.13.4-eb42407
         env:
           - name: "ALIYUN_REGION_ID"
-            value: "cn-hangzhou"
+            value: "cn-shanghai"
           - name: "ALIYUN_LOGTAIL_USER_ID"
             value: "xxx" #aliyun uid
           - name: "ALIYUN_LOGTAIL_USER_DEFINED_ID"
