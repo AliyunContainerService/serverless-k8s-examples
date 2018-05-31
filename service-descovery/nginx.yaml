@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-headless
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-intranet
+  annotations:
+    service.beta.kubernetes.io/alicloud-loadbalancer-address-type: intranet
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+  type: LoadBalancer
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: inbound
+        image:  nginx:alpine
+        ports:
+        - containerPort: 80
+      - name: outbound
+        image: nginx:alpine
+        env:
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        command: ["sh", "-c"]
+        args: ["set -x; while :; do nslookup nginx-service-headless; nslookup nginx-service-intranet; nslookup nginx-service-headless.$NAMESPACE.svc.cluster.local; nslookup nginx-service-intranet.$NAMESPACE.svc.cluster.local; sleep 2; done"]
+
