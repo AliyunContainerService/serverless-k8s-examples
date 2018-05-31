@@ -1,6 +1,6 @@
 ## WordPress Application using Aliyun RDS
 
-The following document describes the deployment of a wordpress application using aliyun rds.
+The following document describes the deployment of a wordpress application with MySQL database from Alibaba Cloud RDS.
 
 ## Test It Out
 
@@ -35,7 +35,7 @@ Access the sample application
 LB_ENDPOINT=$(kubectl get service wordpress-svc  -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
 
 # Open browser with URL in MacOSX
-open http://${LB_ENDPOINT}:80/sample/
+open http://${LB_ENDPOINT}
 ```
 
 Delete application

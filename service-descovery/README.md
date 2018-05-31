@@ -4,8 +4,8 @@ The following sample is for running a simple nginx application to demonstrate se
 
 ## Test It Out
 
-1. Ensure PrivateZone product enabled (https://dns.console.aliyun.com/#/privateZone/list)
-2. Create Serverless cluster, and enable "PrivateZone Service Descovery" in console.
+1. Ensure PrivateZone service is enabled (https://dns.console.aliyun.com/#/privateZone/list)
+2. Create Serverless Kubernetes cluster, and check the option for "Using PrivateZone for service descovery" 
 3. Deploy application
 
 ```
