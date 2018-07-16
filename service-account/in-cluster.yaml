@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: in-cluster
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: in-cluster
+  template:
+    metadata:
+      labels:
+        app: in-cluster
+    spec:
+      containers:
+      - name: in-cluster
+        image: registry.cn-hangzhou.aliyuncs.com/serverless-kubernetes/in-cluster
+        env:
+        - name: "KUBERNETES_SERVICE_HOST"
+          value: xxx.serverless-1.kubernetes.cn-shanghai.aliyuncs.com # apiserver address
+        - name: "KUBERNETES_SERVICE_PORT"
+          value: "6443"
+      - image: ubuntu
+        name: ubuntu
+        command: ["sh", "-c"]
+        args: ["set -x; apt-get update; apt-get install -y curl; curl -k -H \"Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)\" https://$KUBERNETES_SERVICE_HOST:6443/api/v1/namespaces/$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)/pods; sleep 100000;"]
+        env:
+        - name: "KUBERNETES_SERVICE_HOST"
+          value: xxx.serverless-1.kubernetes.cn-shanghai.aliyuncs.com # apiserver address
