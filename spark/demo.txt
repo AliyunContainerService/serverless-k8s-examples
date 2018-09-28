@@ -1,0 +1,25 @@
+Demo
+
+1. Open Aliyun Container Service Console. https://cs.console.aliyun.com/
+
+2. Create Serverless Kubernetes Cluster, choose Hangzhou Region, create vpc automaticlly, and enable privateZone
+
+3. Create Spark cluster on serverless k8s cluster
+
+   kubectl apply -f ./spark.yaml
+
+4. Scale the spark-worker
+
+   kubectl scale deploy spark-worker --replicas=3
+
+5. Open Spark WebUI
+
+   kubectl get svc | grep spark-webui
+   Open web console: http://$Spark-MasterIP:8080
+
+6. Exec into spark worker container, run SparkPi Job, and check the result
+
+   kubectl exec -it $spark-worker-pod bash
+   ping spark-master
+   wget http://serverless-k8s-demo.oss-cn-hangzhou-internal.aliyuncs.com/Game-Of-Thrones.txt
+   /spark/bin/spark-submit /spark/examples/src/main/python/wordcount.py ./Game-Of-Thrones.txt > output.txt
