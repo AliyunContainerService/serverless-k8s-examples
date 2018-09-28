@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-webui
+spec:
+  ports:
+    - name: webui
+      port: 8080
+      targetPort: 8080
+    - name: master
+      port: 7077
+      targetPort: 7077
+  selector:
+    component: "spark-spark-master"
+  type: "LoadBalancer"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-master
+spec:
+  ports:
+    - port: 7077
+      targetPort: 7077
+  selector:
+    component: "spark-spark-master"
+  clusterIP: None
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: spark-master
+  labels:
+    component: "spark-spark-master"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: "spark-spark-master"
+  template:
+    metadata:
+      labels:
+        component: "spark-spark-master"
+    spec:
+      containers:
+        - name: spark-master
+          imagePullPolicy: IfNotPresent
+          image: "registry-vpc.cn-hangzhou.aliyuncs.com/serverless-kubernetes/spark:lightweighted"
+          command: ["/bin/sh","-c"]
+          args: ["echo $(hostname -i) spark-master >> /etc/hosts; /spark/bin/spark-class org.apache.spark.deploy.master.Master --ip spark-master --port 7077 --webui-port 8080"]
+          ports:
+            - containerPort: 7077
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+          env:
+          - name: SPARK_DAEMON_MEMORY
+            value: "1g"
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: spark-worker
+  labels:
+    component: "spark-spark-worker"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: "spark-spark-worker"
+  template:
+    metadata:
+      labels:
+        component: "spark-spark-worker"
+    spec:
+      containers:
+        - name: spark-worker
+          image: "registry-vpc.cn-hangzhou.aliyuncs.com/serverless-kubernetes/spark:lightweighted"
+          command: ["/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077", "--webui-port", "8081"]
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+          env:
+          - name: SPARK_DAEMON_MEMORY
+            value: "1g"
+          - name: SPARK_WORKER_MEMORY
+            value: "1g"
