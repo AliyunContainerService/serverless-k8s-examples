@@ -28,11 +28,11 @@ spec:
         - name: TILLER_NAMESPACE
           valueFrom:
             fieldRef:
-              fieldPath: metadata.labels['namespace']
+              fieldPath: metadata.namespace
         - name: HELM_CLIENT_NAMESPACE
           valueFrom:
             fieldRef:
-              fieldPath: metadata.labels['namespace']
+              fieldPath: metadata.namespace
         - name: TILLER_HISTORY_MAX
           value: "0"
         image: registry.cn-hangzhou.aliyuncs.com/ask/tiller:v2.8.2-ask
