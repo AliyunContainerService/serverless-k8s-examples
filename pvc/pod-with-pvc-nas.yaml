@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity:
+    storage: 8Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: xxx-ixxxx.cn-hangzhou.nas.aliyuncs.com
+    path: "/nfs/"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: default
+  name: nginx2
+spec:
+  containers:
+  - name: test
+    image: nginx
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /pvc
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: nfs-pvc
