@@ -9,7 +9,7 @@ The following sample is for running a simple nginx application to demonstrate se
 3. Deploy application
 
 ```
-kubectl create -f ./ngix.yaml
+kubectl create -f ./nginx.yaml
 ```
 
 Check on the status of the pod using this command: 
@@ -21,10 +21,10 @@ kubectl logs $nginx-pod -c outbound
 
 In same vpc, we can access the services by several domain names:
 ```
-ping nginx-service-headless.$NAMESPACE.svc.cluster.local
+ping nginx-service-headless.default.svc
 ping nginx-service-headless
 
-ping nginx-service-intranet.$NAMESPACE.svc.cluster.local
+ping nginx-service-intranet.default.svc
 ping nginx-service-intranet
 ```
 

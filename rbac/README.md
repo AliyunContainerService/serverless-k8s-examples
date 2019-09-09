@@ -1,6 +1,6 @@
-## Service Account Sample
+## RBAC Sample
 
-The following sample is for running a simple application to demonstrate service account usage.
+The following sample is for running a simple application to demonstrate rbac usage.
 
 The pod contains two containers:
 
@@ -47,7 +47,7 @@ kubectl logs -l app=in-cluster -c ubuntu
 ...
 ```
 
-Delete deployment and services
+Delete deployment and serviceAccount
 
 ```
 kubectl delete -f ./in-cluster.yaml

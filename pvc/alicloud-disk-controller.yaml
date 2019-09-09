@@ -1,0 +1,126 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: alicloud-disk-essd
+provisioner: alicloud/disk
+parameters:
+  type: cloud_essd
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: alicloud-disk-efficiency
+provisioner: alicloud/disk
+parameters:
+  type: cloud_efficiency
+
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: alicloud-disk-ssd
+provisioner: alicloud/disk
+parameters:
+  type: cloud_ssd
+
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: alicloud-disk-available
+provisioner: alicloud/disk
+parameters:
+  type: available
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: alicloud-disk-controller-runner
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: alicloud-disk-controller
+  namespace: kube-system
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: run-alicloud-disk-controller
+subjects:
+  - kind: ServiceAccount
+    name: alicloud-disk-controller
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: alicloud-disk-controller-runner
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloud-config
+  namespace: kube-system
+data:
+  special.keyid: "xxx"
+  special.keysecret: "xxx"
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: alicloud-disk-controller
+  namespace: kube-system
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: alicloud-disk-controller
+    spec:
+      serviceAccount: alicloud-disk-controller
+      containers:
+        - name: alicloud-disk-controller
+          image: registry.cn-hangzhou.aliyuncs.com/acs/alicloud-disk-controller:v1.12.6.21-54d91d6-aliyun
+          env:
+          - name: ACCESS_KEY_ID
+            valueFrom:
+              configMapKeyRef:
+                name: cloud-config
+                key: special.keyid
+          - name: ACCESS_KEY_SECRET
+            valueFrom:
+              configMapKeyRef:
+                name: cloud-config
+                key: special.keysecret
+          volumeMounts:
+            - name: cloud-config
+              mountPath: /etc/kubernetes/
+            - name: logdir
+              mountPath: /var/log/alicloud/
+      volumes:
+        - name: cloud-config
+          emptyDir:
+            path: /etc/kubernetes/
+        - name: logdir
+          emptyDir:
+            path: /var/log/alicloud/
