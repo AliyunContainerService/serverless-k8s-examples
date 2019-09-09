@@ -53,5 +53,5 @@ spec:
               fieldRef:
                 fieldPath: metadata.namespace
         command: ["sh", "-c"]
-        args: ["set -x; while :; do nslookup nginx-service-headless; nslookup nginx-service-intranet; nslookup nginx-service-headless.$NAMESPACE.svc.cluster.local; nslookup nginx-service-intranet.$NAMESPACE.svc.cluster.local; sleep 2; done"]
+        args: ["set -x; while :; do nslookup nginx-service-headless; nslookup nginx-service-intranet; nslookup nginx-service-headless.default.svc; nslookup nginx-service-intranet.default.svc; sleep 2; done"]
 
