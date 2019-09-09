@@ -2,7 +2,8 @@
 
 The following sample is for running a simple application to demonstrate pv/pvc usage.
 
-Firstly, we should install alicloud-disk-controller in Serverless Kubernetes
+## Deploy alicloud-disk-controller
+Firstly, we should install alicloud-disk-controller in Serverless Kubernetes cluster.
 Please use your own AK in configmap of alicloud-disk-controller.yaml
 
 ```
