@@ -13,8 +13,8 @@ kubectl create -f ./basic-pod.yaml
 Check on the status of the pod using this command: 
 
 ```
-kubectl get pod basic-pod
-kubectl logs basic-pod
+kubectl get pod test-pod
+kubectl logs test-pod
 ```
 
 Delete pod

@@ -16,21 +16,24 @@ Create the Serverless Kubernetes and copy the cluster config file to  ```~/.kube
 ![config](./config.png)
 
 
+## Create NAT Gateway (Suggested)
 
-## Test it Out
+Create NAT Gateway if you want to pull image from internet (e.g. Docker Hub), or your applications want to access internet.
 
+![snat](./SNAT.png)
 
+## Test It Out
 
 Deploy nginx application
 
 
-
 ```
-# Pull image from VPC internal URI
+# Pull image from internet public URI with NAT GW
+kubectl run nginx --image nginx:1.13 --replicas=3
+
+# or pull image from Aliyun Container Registry (ACR) through VPC internal URI
 kubectl run nginx --image registry-vpc.cn-shanghai.aliyuncs.com/denverdino/nginx:1.13.12 --replicas=3
 
-# or pull image from public URI with NAT GW for internet
-kubectl run nginx --image nginx:1.13 --replicas=3
 ```
 
 Expose nginx with Elastic Load Balancer(ELB) service 
@@ -61,11 +64,11 @@ open http://${LB_ENDPOINT}
 Delete the nginx application
 
 ```
-kubectl delete deploy nginx
+kubectl delete deployment nginx
 ```
 
 Delete the nginx service
 
 ```
-kubectl delete --name=nginx-svc
+kubectl delete service nginx-svc
 ```
