@@ -2,7 +2,7 @@ Demo
 
 1. Open Aliyun Container Service Console. https://cs.console.aliyun.com/
 
-2. Create Serverless Kubernetes Cluster, choose Hangzhou Region, create vpc automaticlly, and enable privateZone
+2. Create Serverless Kubernetes Cluster, choose Hangzhou Region, create vpc automatically, and enable PrivateZone
 
 3. Create Spark cluster on serverless k8s cluster
 

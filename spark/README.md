@@ -8,7 +8,7 @@ The following document describes the deployment of a Spark Standalone Cluster .
 Deploy application
 
 ```
-kubectl apply -f spark-one.yml
+kubectl apply -f spark-one.yaml
 ```
 
 Check status of the deployments/pods/services:
@@ -60,5 +60,5 @@ Delete application
 
 
 ```
-kubectl delete -f spark-one.yml
+kubectl delete -f spark-one.yaml
 ```
