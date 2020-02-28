@@ -26,7 +26,7 @@ alicloud-disk-controller   1         1         1            1           160m
 1. Deploy disk pvc application
 
 ```
-kubectl create -f ./pod-with-pvc-disk.yaml
+kubectl create -f ./disk-pvc-dynamic.yaml
 ```
 
 After pod running, check the pv/pvc and disk'smounted path.
@@ -46,13 +46,13 @@ lost+found
 
 Delete resources:
 ```
-kubectl delete -f ././pod-with-pvc-disk.yaml
+kubectl delete -f ./disk-pvc-dynamic.yaml
 ```
 
 2. Deploy nas pvc application
 
 ```
-kubectl create -f ./pod-with-pvc-nas.yaml
+kubectl create -f ./nas-pvc.yaml
 ```
 
 After pod running, check the pv/pvc and disk'smounted path.
@@ -69,7 +69,7 @@ nfs-pv                   8Gi        RWX            Retain           Bound    def
 
 Delete resources:
 ```
-kubectl delete -f ././pod-with-pvc-disk.yaml
+kubectl delete -f ./nas-pvc.yaml
 ```
 
 

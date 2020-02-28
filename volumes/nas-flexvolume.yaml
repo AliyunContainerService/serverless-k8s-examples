@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: nas
+            mountPath: "/data"
+      volumes:
+      - name: "nas"
+        flexVolume:
+          driver: "alicloud/nas"
+          options:
+            server: "133aa489f0-rvn26.cn-beijing.nas.aliyuncs.com"
+            path: "/"
+            vers: "3"
+            options: "nolock,tcp,noresvport"

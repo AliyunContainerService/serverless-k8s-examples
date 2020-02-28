@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: alpine
+  name: alpine
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: alpine
+  template:
+    metadata:
+      labels:
+        app: alpine
+    spec:
+      containers:
+      - image: alpine
+        imagePullPolicy: Always
+        args:
+        - ping
+        - 127.0.XX.XX
+        name: alpine
+        env:
+        - name: aliyun_logs_project
+          value: k8s-xxx
+        - name: aliyun_logs_machinegroup
+          value: k8s-group-app-alpine
+        - name: aliyun_logs_log-stdout
+          value: stdout
+        - name: aliyun_logs_test-file
+          value: /log/*.log
+        - name: aliyun_logs_test-stdout_ttl
+          value: "7"
+        - name: aliyun_logs_test-stdout_shard
+          value: "2"
+        volumeMounts:
+        - name: volume-sls
+          mountPath: /log
+      volumes:
+      - name: volume-sls
