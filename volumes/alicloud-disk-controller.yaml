@@ -119,8 +119,6 @@ spec:
               mountPath: /var/log/alicloud/
       volumes:
         - name: cloud-config
-          emptyDir:
-            path: /etc/kubernetes/
+          emptyDir: {}
         - name: logdir
-          emptyDir:
-            path: /var/log/alicloud/
+          emptyDir: {}
