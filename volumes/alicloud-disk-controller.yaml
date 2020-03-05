@@ -113,14 +113,8 @@ spec:
                 name: cloud-config
                 key: special.keysecret
           volumeMounts:
-            - name: cloud-config
-              mountPath: /etc/kubernetes/
             - name: logdir
               mountPath: /var/log/alicloud/
       volumes:
-        - name: cloud-config
-          emptyDir:
-            path: /etc/kubernetes/
         - name: logdir
-          emptyDir:
-            path: /var/log/alicloud/
+          emptyDir: {}
