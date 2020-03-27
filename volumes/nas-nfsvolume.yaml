@@ -25,6 +25,5 @@ spec:
       volumes:
       - name: "nas"
         nfs:
-          options:
-            server: "133aa489f0-rvn26.cn-beijing.nas.aliyuncs.com"
-            path: "/"
+          server: "133aa489f0-rvn26.cn-beijing.nas.aliyuncs.com"
+          path: "/"
