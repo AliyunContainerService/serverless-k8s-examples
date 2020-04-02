@@ -100,7 +100,7 @@ spec:
       serviceAccount: alicloud-disk-controller
       containers:
         - name: alicloud-disk-controller
-          image: registry.cn-hangzhou.aliyuncs.com/acs/alicloud-disk-controller:v1.12.6.21-54d91d6-aliyun
+          image: registry.cn-hangzhou.aliyuncs.com/acs/alicloud-disk-controller:v1.14.8.37-bd3fd891-aliyun
           env:
           - name: ACCESS_KEY_ID
             valueFrom:
