@@ -1,0 +1,57 @@
+# The following sample is for running a simple application using Aliyun OSS Volume
+#
+# Prerequisites:
+#
+# 1. Create a ramrole with name "ramrole-ossshare".
+# 2. Set its permissions as "AliyunOSSFullAccess".
+# 3. Set its trust policy as below statement.
+#   {
+#       "Statement": [
+#        {
+#            "Action": "sts:AssumeRole",
+#            "Effect": "Allow",
+#            "Principal": {
+#                "Service": [
+#                    "ecs.aliyuncs.com"
+#                ]
+#            }
+#        }
+#    ],
+#    "Version": "1"
+#   }
+#
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-oss-deploy
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+      annotations:
+        "k8s.aliyun.com/eci-ram-role-name": ramrole-ossshare
+    spec:
+      containers:
+      - name: nginx-flexvolume-oss
+        image: nginx
+        volumeMounts:
+          - name: "oss"
+            mountPath: "/data"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - cd /data
+          initialDelaySeconds: 30
+          periodSeconds: 30
+      volumes:
+        - name: "oss"
+          flexVolume:
+            driver: "alicloud/oss"
+            options:
+              bucket: "serverless-k8s-demo"
+              url: "oss-cn-hangzhou-internal.aliyuncs.com"
+              otherOpts: "-o max_stat_cache_size=0 -o allow_other"
