@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image:  nginx:alpine
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "2"
+            memory: "4Gi"
+---
+apiVersion: autoscaling.alibabacloud.com/v1beta1
+kind: ElasticWorkload
+metadata:
+  name: elasticworkload-nginx
+spec:
+  sourceTarget:
+    name: nginx-deploy
+    kind: Deployment
+    apiVersion: extensions/v1beta1
+    min: 0
+    max: 2
+  replicas: 6
+  elasticUnit:
+  - name: eci-spot
+    annotations:
+      k8s.aliyun.com/eci-spot-strategy: "SpotAsPriceGo"
