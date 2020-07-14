@@ -72,3 +72,10 @@ Delete the nginx service
 ```
 kubectl delete service nginx-svc
 ```
+
+## Community
+
+Join the DingTalk Group
+
+![dingtalk](./dingtalk.png)
+
