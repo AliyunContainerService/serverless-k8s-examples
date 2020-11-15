@@ -209,8 +209,6 @@ spec:
           timeoutSeconds: 10
         securityContext:
           capabilities:
-              drop:
-              - ALL
               add:
               - NET_ADMIN
           runAsUser: 33
