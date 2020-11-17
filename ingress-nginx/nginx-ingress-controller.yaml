@@ -203,7 +203,7 @@ spec:
      priorityClassName: system-node-critical
      containers:
      - name: nginx-ingress-controller
-       image: registry-vpc.cn-hangzhou.aliyuncs.com/acs/aliyun-ingress-controller:v0.30.0.2-9597b3685-aliyun
+       image: registry.cn-hangzhou.aliyuncs.com/acs/aliyun-ingress-controller:v0.30.0.2-9597b3685-aliyun
        args:
          - /nginx-ingress-controller
          - --configmap=$(POD_NAMESPACE)/nginx-configuration
