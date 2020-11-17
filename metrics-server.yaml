@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin
+  namespace: kube-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    task: monitoring
+    # For use as a Cluster add-on (https://github.com/kubernetes/kubernetes/tree/master/cluster/addons)
+    # If you are NOT using this as an addon, you should comment out this line.
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: metrics-server
+  name: heapster
+  namespace: kube-system
+spec:
+  ports:
+  - port: 80
+    targetPort: 8082
+  selector:
+    k8s-app: metrics-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metrics-server
+  namespace: kube-system
+  labels:
+    kubernetes.io/name: metrics-server
+spec:
+  selector:
+    k8s-app: metrics-server
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 443
+---
+apiVersion: apiregistration.k8s.io/v1beta1
+kind: APIService
+metadata:
+  name: v1beta1.metrics.k8s.io
+spec:
+  service:
+    name: metrics-server
+    namespace: kube-system
+  group: metrics.k8s.io
+  version: v1beta1
+  insecureSkipTLSVerify: true
+  groupPriorityMinimum: 100
+  versionPriority: 100
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-server
+  namespace: kube-system
+  labels:
+    k8s-app: metrics-server
+spec:
+  selector:
+    matchLabels:
+      k8s-app: metrics-server
+  template:
+    metadata:
+      name: metrics-server
+      labels:
+        k8s-app: metrics-server
+    spec:
+      serviceAccountName: admin
+      priorityClassName: system-node-critical
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: k8s.aliyun.com
+                operator: NotIn
+                values:
+                - "true"
+      containers:
+      - name: metrics-server
+        image: registry.cn-hangzhou.aliyuncs.com/acs/metrics-server:v0.3.7-4c92472-aliyun
+        imagePullPolicy: Always
+        command:
+        - /metrics-server
+        - "--source=kubernetes.hybrid:''"
+        #- "--sink=socket:tcp://monitor.csk.cn-hangzhou.aliyuncs.com:8093?clusterId=$clusterId&public=true"
+        livenessProbe:
+          tcpSocket:
+            port: 443
+        readinessProbe:
+          tcpSocket:
+            port: 443
+        securityContext:
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+          limits:
+            cpu: 4
+            memory: 8Gi
+        volumeMounts:
+          - mountPath: /var/addon
+            name: addon-token
+            readOnly: true
+      volumes:
+        - name: addon-token
+          secret:
+            defaultMode: 420
+            items:
+              - key: addon.token.config
+                path: token-config
+            secretName: addon.cms.token
