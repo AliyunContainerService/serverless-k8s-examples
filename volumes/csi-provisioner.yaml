@@ -263,11 +263,6 @@ spec:
             - "--leader-election=true"
           imagePullPolicy: Always
         - name: csi-provisioner
-          securityContext:
-            privileged: true
-            capabilities:
-              add: ["SYS_ADMIN"]
-            allowPrivilegeEscalation: true
           image: registry.cn-hangzhou.aliyuncs.com/acs/csi-plugin:v1.16.9.43-f36bb540-aliyun
           imagePullPolicy: "Always"
           args:
@@ -295,13 +290,8 @@ spec:
               containerPort: 11270
               protocol: TCP
           volumeMounts:
-            - name: host-dev
-              mountPath: /dev
-              mountPropagation: "HostToContainer"
             - name: host-log
               mountPath: /var/log/
-            - name: etc
-              mountPath: /host/etc
             - name: disk-provisioner-dir
               mountPath: /var/lib/kubelet/csi-provisioner/diskplugin.csi.alibabacloud.com
             - name: nas-provisioner-dir
@@ -322,11 +312,7 @@ spec:
         - name: nas-provisioner-dir
           emptyDir: {}
         - name: host-log
-          hostPath:
-            path: /var/log/
-        - name: host-dev
-          hostPath:
-            path: /dev
+          emptyDir: {}
         - name: addon-token
           secret:
             defaultMode: 420
@@ -334,9 +320,6 @@ spec:
             - key: addon.token.config
               path: token-config
             secretName: addon.csi.token
-        - name: etc
-          hostPath:
-            path: /etc
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
