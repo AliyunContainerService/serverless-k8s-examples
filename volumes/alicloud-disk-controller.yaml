@@ -135,7 +135,7 @@ spec:
       labels:
         app: alicloud-disk-controller
     spec:
-      serviceAccount: alicloud-disk-controller
+      serviceAccount: alicloud-csi-plugin
       containers:
         - name: alicloud-csi-plugin
           image: registry.cn-hangzhou.aliyuncs.com/acs/alicloud-disk-controller:v1.14.8.51-842f0a81-aliyun
