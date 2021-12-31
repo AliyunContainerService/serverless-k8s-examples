@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eb-ask-demo
+spec:
+  selector:
+    matchLabels:
+      app: eb-ask-demo
+  template:
+    metadata:
+      labels:
+        app: eb-ask-demo
+    spec:
+      containers:
+      - name: eb-ask-demo
+        image: "registry.cn-hangzhou.aliyuncs.com/kubeway/demo-ossunzip:v0.0.1-20211220090127_master_65a1508-dirty"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: OSS_ACCESSKEYID
+          value: "ak" # replace with your access key id
+        - name: OSS_ACCESSKEYSECRET
+          value: "sk" # replace with your access key secret
+        - name: OSS_ENDPOINT
+          value: "oss-cn-hangzhou.aliyuncs.com"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  eb-ask-demo
+spec:
+  selector:
+    app: eb-ask-demo
+  type:  LoadBalancer 
+  ports:
+  - name:  http
+    port:  80
+    protocol: TCP
+    targetPort:  8080

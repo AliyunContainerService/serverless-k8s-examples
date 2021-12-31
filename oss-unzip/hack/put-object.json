@@ -1,0 +1,44 @@
+{
+    "datacontenttype": "application/json;charset=utf-8",
+    "aliyunaccountid": "15812045431****",
+    "data": {
+        "region": "cn-hangzhou",
+        "eventVersion": "1.0",
+        "eventSource": "acs:oss",
+        "eventName": "ObjectCreated:PutObject",
+        "eventTime": "2021-12-12T06:45:43.000Z",
+        "requestParameters": {
+            "sourceIPAddress": "118.31.XX.XX"
+        },
+        "userIdentity": {
+            "principalId": "28815334868278****"
+        },
+        "responseElements": {
+            "requestId": "61161517B258223732BC****"
+        },
+        "oss": {
+            "bucket": {
+                "name": "eb-ask",
+                "arn": "acs:oss:cn-hangzhou:15812045431****:eb-ask",
+                "ownerIdentity": "15812045431****"
+            },
+            "ossSchemaVersion": "1.0",
+            "object": {
+                "size": 9,
+                "deltaSize": 9,
+                "eTag": "F0F18C2C66AE1DD512BDCD4366F7****",
+                "key": "zip/demo.zip"
+            }
+        }
+    },
+    "subject": "acs:oss:cn-hangzhou:15812045431****:eb-ask/1628837143916",
+    "aliyunoriginalaccountid": "15812045431****",
+    "source": "acs.oss",
+    "type": "oss:ObjectCreated:PutObject",
+    "aliyunpublishtime": "2021-12-12T06:45:43.986Z",
+    "specversion": "1.0",
+    "aliyuneventbusname": "default",
+    "id": "61161517B258223732BC****",
+    "time": "2021-12-12T06:45:43Z",
+    "aliyunregionid": "cn-hangzhou"
+}
