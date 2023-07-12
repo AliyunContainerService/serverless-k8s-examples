@@ -26,7 +26,7 @@ spec:
     component: "spark-spark-master"
   clusterIP: None
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spark-master
@@ -59,7 +59,7 @@ spec:
           - name: SPARK_DAEMON_MEMORY
             value: "1g"
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spark-worker
