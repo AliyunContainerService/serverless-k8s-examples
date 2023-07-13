@@ -62,6 +62,6 @@ open http://$LB_ENDPOINT
 Delete deployments and services
 
 ```
-kubectl delete -f ./wordpress-mysql.yaml
+kubectl delete -k ./
 ```
 
