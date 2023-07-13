@@ -32,7 +32,7 @@ Access the sample application
 LB_ENDPOINT=$(kubectl get service tomcat-app-svc  -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
 
 # Open browser with URL in MacOSX
-open http://${LB_ENDPOINT}:8080/sample/
+open http://$LB_ENDPOINT:8080/sample/
 ```
 
 Delete application

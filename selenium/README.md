@@ -62,7 +62,7 @@ Access the Selenium Hub
 LB_ENDPOINT=$(kubectl get service selenium-hub-lb  -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
 
 # Open browser with URL in MacOSX
-open http://${LB_ENDPOINT}:4444/grid/console
+open http://$LB_ENDPOINT:4444/grid/console
 ```
 
 Delete deployments and services

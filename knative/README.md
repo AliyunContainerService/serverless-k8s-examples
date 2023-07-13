@@ -80,7 +80,7 @@ Access the sample application
 $ LB_ENDPOINT=$(kubectl get service ingress-gateway -n knative-serving -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
 
 # Curl URL with host name
-$ curl -H "Host: coffee.default.example.com" http://${LB_ENDPOINT}
+$ curl -H "Host: coffee.default.example.com" http://$LB_ENDPOINT
 Hello coffee!
 ```
 
@@ -96,7 +96,7 @@ Run the load test with following configurations
 
 
 ```
-$ hey -z 30s -c 90 --host "coffee.default.example.com" "http://${LB_ENDPOINT}/?sleep=100"
+$ hey -z 30s -c 90 --host "coffee.default.example.com" "http://$LB_ENDPOINT/?sleep=100"
 
 Summary:
   Total:	30.1015 secs
