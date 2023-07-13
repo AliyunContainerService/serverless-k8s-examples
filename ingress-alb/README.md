@@ -9,7 +9,7 @@ Deploy the Cafe Application.
 Create the coffee and the tea deployments, services, and ingress:
 
 ```
-kubectl create -f ./ingress-cafe-demo.yaml
+kubectl apply -f ./ingress-cafe-demo.yaml
 ```
 
 Check on the status of the pod using this command: 
