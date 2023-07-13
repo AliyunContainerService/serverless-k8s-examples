@@ -4,6 +4,10 @@ In this example we deploy a simple web application and then configure load balan
 
 ## Test It Out
 
+Install and config the ALB Ingress Controller
+https://www.alibabacloud.com/help/zh/ack/serverless-kubernetes/user-guide/manage-the-alb-ingress-controller
+
+
 Deploy the Cafe Application.
 
 Create the coffee and the tea deployments, services, and ingress:
@@ -32,35 +36,40 @@ tea-6bcb468bfc-jkjzw     1/1       Running   0          16m
 tea-6bcb468bfc-mnw7h     1/1       Running   0          16m
 
 $ kubectl get svc --all-namespaces
-NAMESPACE     NAME             TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
-default       coffee-svc       ClusterIP      None           <none>           80/TCP                       4m35s
-default       tea-svc          ClusterIP      None           <none>           80/TCP                       4m35s
-kube-system   alb-ingress-lb   LoadBalancer   172.19.4.82   139.196.2.186     80:30200/TCP,443:31136/TCP   4m31s
+NAMESPACE   NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+default     coffee-svc   ClusterIP   None         <none>        80/TCP    98m
+default     kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   3d8h
+default     tea-svc      ClusterIP   None         <none>        80/TCP    98m
 ...
 
 $ kubectl get ingress
-NAME           HOSTS              ADDRESS         PORTS     AGE
-cafe-ingress   cafe.example.com   139.196.2.186   80        16m
+NAME           CLASS   HOSTS   ADDRESS                                                  PORTS   AGE
+cafe-ingress   alb     *       alb-xxxx.cn-zhangjiakou.alb.aliyuncs.com   80      99m
 ```
+
+
 
 To get coffee:
 ```
-$ curl -H "Host:cafe.example.com" 139.196.2.186/coffee
-Server address: 192.168.133.107:80
-Server name: coffee-f5cd54465-f82f5
-Date: 28/Jun/2018:11:49:30 +0000
+
+INGRESS_ADDRESS=$(kubectl get ingress cafe-ingress -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+
+$ curl $INGRESS_ADDRESS/coffee
+Server address: 192.168.54.127:80
+Server name: coffee-7f99b48c49-mw9h8
+Date: 13/Jul/2023:15:07:14 +0000
 URI: /coffee
-Request ID: 2b81fbb5ba3e22a0ae7eb5f1806d4ce2
+Request ID: e635ce56f1188568ceadddc28b1caace
 ```
 
 If your rather prefer tea:
 ```
-$ curl -H "Host:cafe.example.com" 139.196.2.186/tea
-Server address: 192.168.133.109:80
-Server name: tea-6bcb468bfc-mnw7h
-Date: 28/Jun/2018:11:50:17 +0000
+$ curl $INGRESS_ADDRESS/tea
+Server address: 192.168.54.127:80
+Server name: coffee-7f99b48c49-mw9h8
+Date: 13/Jul/2023:15:07:53 +0000
 URI: /tea
-Request ID: 517c32f5dccc6ab88e4593f7c0ef00d5
+Request ID: 9b739572ac6d4f0d6e4a4e9268a6ff78
 ```
 
 Delete deployments, services, and ingress
