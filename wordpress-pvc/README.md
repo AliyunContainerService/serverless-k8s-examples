@@ -11,10 +11,15 @@ https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persis
 1. Ensure PrivateZone service is enabled (https://dns.console.aliyun.com/#/privateZone/list)
 2. Create Serverless Kubernetes cluster, and check the option for "Using PrivateZone for service descovery" 
 3. Install and update csi-provisioner addon to Serverless Kubernetes cluster, https://www.alibabacloud.com/help/zh/ack/serverless-kubernetes/user-guide/install-and-update-csi-provisioner 
+4. Set default storage class
 
-4. Modify the ```kustomization.yaml``` file with your password
+```
+kubectl patch storageclass alicloud-disk-available -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
 
-5. Deploy application
+5. Modify the ```kustomization.yaml``` file with your password
+
+6. Deploy application
 
 
 ```
