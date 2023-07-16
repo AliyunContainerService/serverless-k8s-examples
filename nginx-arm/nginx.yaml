@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-arm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-arm
+  template:
+    metadata:
+      labels:
+        app: nginx-arm
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
+      containers:
+      - name: nginx-arm
+        image: nginx
+        resources:
+          requests:
+            cpu: 512m
+            memory: 1Gi
