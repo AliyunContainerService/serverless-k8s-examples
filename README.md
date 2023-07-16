@@ -25,8 +25,8 @@ Create NAT Gateway if you want to pull image from internet (e.g. Docker Hub), or
 ## Featured samples
 
 * [wordpress](./wordpress) - Official wordpress sample without PVC
-* [wordpress-pvc](./Wordpress-pvc) - Official wordpress sample with PVC
-* [wordpress-eip](./Wordpress-eip) - Wordpress sample with EIP
+* [wordpress-pvc](./wordpress-pvc) - Official wordpress sample with PVC
+* [wordpress-eip](./wordpress-eip) - Wordpress sample with EIP
 * [nginx-arm](./nginx-arm) - Arm-based Nginx sample
 * [ingress-alb](./ingress-alb) - Simple web application with Application Load Balancer
 
