@@ -2,6 +2,11 @@
 
 In this example we deploy a simple web application and then configure Application Load Balancer for that application using the Ingress resource.
 
+## Prerequisites
+
+You need to create the Serverless K8s cluster in the available region and AZs for ALB
+https://help.aliyun.com/document_detail/258300.html
+
 ## Test It Out
 
 Install and config the ALB Ingress Controller

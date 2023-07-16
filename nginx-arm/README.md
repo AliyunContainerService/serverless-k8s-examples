@@ -1,6 +1,12 @@
 ## Deploying Arm-based Nginx Demo
 
-In this example we deploy a nginx application with multi-arch image on Arm-based instance
+In this example we deploy a nginx application with multi-arch image on Arm-based instance.
+
+
+## Prerequisites
+
+And you can found the available region and AZs for Arm instance
+https://ecs-buy.aliyun.com/instanceTypes#/instanceTypeByRegion
 
 ## Deploy 
 
