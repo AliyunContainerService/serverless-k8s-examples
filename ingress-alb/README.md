@@ -1,6 +1,6 @@
 ## Deploying Ingress Demo
 
-In this example we deploy a simple web application and then configure load balancing for that application using the Ingress resource.
+In this example we deploy a simple web application and then configure Application Load Balancer for that application using the Ingress resource.
 
 ## Test It Out
 

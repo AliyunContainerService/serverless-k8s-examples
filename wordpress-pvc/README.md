@@ -64,7 +64,7 @@ LB_ENDPOINT=$(kubectl get service wordpress  -o jsonpath="{.status.loadBalancer.
 open http://$LB_ENDPOINT
 ```
 
-Delete deployments and services
+7. Delete deployments and services
 
 ```
 kubectl delete -k ./

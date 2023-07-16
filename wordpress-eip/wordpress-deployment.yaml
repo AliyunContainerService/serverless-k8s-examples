@@ -1,30 +1,3 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: wordpress
-  labels:
-    app: wordpress
-spec:
-  ports:
-    - port: 80
-  selector:
-    app: wordpress
-    tier: frontend
-  type: LoadBalancer
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wp-pv-claim
-  labels:
-    app: wordpress
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,6 +16,8 @@ spec:
       labels:
         app: wordpress
         tier: frontend
+      annotations:
+        k8s.aliyun.com/eci-with-eip: "true"
     spec:
       containers:
       - image: wordpress:6.2.1-apache
@@ -64,10 +39,3 @@ spec:
           requests:
             cpu: 512m
             memory: 1Gi
-        volumeMounts:
-        - name: wordpress-persistent-storage
-          mountPath: /var/www/html
-      volumes:
-      - name: wordpress-persistent-storage
-        persistentVolumeClaim:
-          claimName: wp-pv-claim

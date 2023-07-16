@@ -2,15 +2,31 @@
 
 The following sample is for deploying a WordPress site and a MySQL database to demonstrate service descovery with DNS
 
+This sample is simplified version from the [official kubernetes sample](https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/) without the PVC.
+
+The full version could be found in [../wordpress-pvc]
+The alternative version with EIP could be found in [../wordpress-eip]
+
+
 ## Test It Out
 
 1. Ensure PrivateZone service is enabled (https://dns.console.aliyun.com/#/privateZone/list)
 2. Create Serverless Kubernetes cluster, and check the option for "Using PrivateZone for service descovery" 
-3. Deploy application
+3. Modify the ```kustomization.yaml``` file with your password
+
+4. Deploy application
+
 
 ```
-kubectl create -f ./wordpress-mysql.yaml
+kubectl apply -k ./
 ```
+
+Verify that the Secret exists by running the following command:
+
+```
+kubectl get secrets
+```
+
 
 Check on the status of the pod using this command: 
 
@@ -38,9 +54,8 @@ LB_ENDPOINT=$(kubectl get service wordpress  -o jsonpath="{.status.loadBalancer.
 open http://$LB_ENDPOINT
 ```
 
-Delete deployments and services
+5. Delete deployments and services
 
 ```
-kubectl delete -f ./wordpress-mysql.yaml
+kubectl delete -k ./
 ```
-

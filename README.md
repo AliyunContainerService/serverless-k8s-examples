@@ -22,56 +22,13 @@ Create NAT Gateway if you want to pull image from internet (e.g. Docker Hub), or
 
 ![snat](./SNAT.png)
 
-## Test It Out
+## Featured samples
 
-Deploy nginx application
-
-
-```
-# Pull image from internet public URI with NAT GW
-kubectl run nginx --image nginx:1.13 --replicas=3
-
-# or pull image from Aliyun Container Registry (ACR) through VPC internal URI
-kubectl run nginx --image registry-vpc.cn-shanghai.aliyuncs.com/denverdino/nginx:1.13.12 --replicas=3
-
-```
-
-Expose nginx with Elastic Load Balancer(ELB) service 
-
-```
-kubectl expose deployment nginx --port=80 --target-port=80 --name=nginx-svc --type=LoadBalancer
-```
-
-
-Get the application status
-
-```
-kubectl get deployment nginx
-kubectl get pod -l run=nginx
-kubectl get service nginx-svc
-```
-
-Access nginx application
-
-```
-LB_ENDPOINT=$(kubectl get service nginx-svc -o jsonpath="{.status.loadBalancer.ingress[*].ip}")
-
-# Open browser with URL in MacOSX
-open http://$LB_ENDPOINT
-```
-
-
-Delete the nginx application
-
-```
-kubectl delete deployment nginx
-```
-
-Delete the nginx service
-
-```
-kubectl delete service nginx-svc
-```
+* [wordpress](./wordpress) - Official wordpress sample without PVC
+* [wordpress-pvc](./Wordpress-pvc) - Official wordpress sample with PVC
+* [wordpress-eip](./Wordpress-eip) - Wordpress sample with EIP
+* [nginx-arm](./nginx-arm) - Arm-based Nginx sample
+* [ingress-alb](./ingress-alb) - Simple web application with Application Load Balancer
 
 ## Community
 

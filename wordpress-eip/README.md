@@ -4,6 +4,8 @@ The following sample is for deploying a WordPress site and a MySQL database to d
 
 The wordpress application can be accessed with [EIP endpoint](https://help.aliyun.com/document_detail/451273.html).
 
+Before the test, you need configure the Security Group of ASK cluster to allow incoming traffic on 80 port. 
+
 ## Test It Out
 
 1. Ensure PrivateZone service is enabled (https://dns.console.aliyun.com/#/privateZone/list)
@@ -11,7 +13,13 @@ The wordpress application can be accessed with [EIP endpoint](https://help.aliyu
 3. Deploy application
 
 ```
-kubectl create -f ./wordpress-mysql.yaml
+kubectl apply -k ./
+```
+
+Verify that the Secret exists by running the following command:
+
+```
+kubectl get secrets
 ```
 
 Check on the status of the pod using this command: 
@@ -32,9 +40,8 @@ echo $ENDPOINT
 open http://$ENDPOINT
 ```
 
-Delete deployments and services
+5. Delete deployments and services
 
 ```
-kubectl delete -f ./wordpress-mysql.yaml
+kubectl delete -k ./
 ```
-
