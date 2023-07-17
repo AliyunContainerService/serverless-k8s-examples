@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cube-service
+  labels:
+    app: cube
+  annotations:
+    service.beta.kubernetes.io/alibaba-cloud-loadbalancer-spec: "slb.s1.small"
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: cube
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cube
+  labels:
+    app: cube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cube
+  template:
+    metadata:
+      labels:
+        app: cube
+    spec:
+      containers:
+      - name: cube
+        image:  registry-vpc.cn-hangzhou.aliyuncs.com/acs/ack-cube
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 1
+            memory: 1Gi

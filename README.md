@@ -24,6 +24,7 @@ Create NAT Gateway if you want to pull image from internet (e.g. Docker Hub), or
 
 ## Featured samples
 
+* [cube](./cube) - Cube sample
 * [wordpress](./wordpress) - Official wordpress sample without PVC
 * [wordpress-pvc](./wordpress-pvc) - Official wordpress sample with PVC
 * [wordpress-eip](./wordpress-eip) - Wordpress sample with EIP
