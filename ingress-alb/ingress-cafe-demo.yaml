@@ -78,7 +78,7 @@ spec:
         pathType: Exact
         backend:
           service:
-            name: coffee-svc
+            name: tea-svc
             port: 
               number: 80
       - path: /coffee
